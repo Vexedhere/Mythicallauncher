@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mythical Launcher | Official Client</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --rs-yellow: #fdb927;
+            --bg: #050505;
+            --sidebar: rgba(0, 0, 0, 0.8);
+            --glass: rgba(255, 255, 255, 0.03);
+            --accent-purple: #8a2be2;
+            --text: #ffffff;
+            --text-dim: #666;
+        }
+
+        * { box-sizing: border-box; -webkit-user-select: none; }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            border: 1px solid #1a1a1a; /* Window Border */
+        }
+
+        /* --- APP DRAG HANDLE --- */
+        .title-bar {
+            height: 35px;
+            background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 15px;
+            -webkit-app-region: drag;
+            font-size: 0.6rem;
+            font-weight: 900;
+            letter-spacing: 2px;
+            color: var(--text-dim);
+        }
+
+        .controls { display: flex; gap: 8px; -webkit-app-region: no-drag; }
+        .dot { width: 10px; height: 10px; border-radius: 50%; background: #222; cursor: pointer; }
+        .dot:hover { background: var(--rs-yellow); }
+
+        /* --- MAIN LAYOUT --- */
+        .app-body { display: flex; flex: 1; position: relative; }
+
+        /* --- SIDEBAR --- */
+        aside {
+            width: 240px;
+            background: var(--sidebar);
+            backdrop-filter: blur(10px);
+            border-right: 1px solid #111;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            z-index: 10;
+        }
+
+        .logo-area { font-weight: 900; color: var(--rs-yellow); font-size: 1.2rem; margin-bottom: 50px; letter-spacing: -1px; }
+        
+        .nav-group { margin-bottom: 30px; }
+        .nav-label { font-size: 0.6rem; color: #444; letter-spacing: 2px; margin-bottom: 15px; display: block; }
+        
+        .nav-item {
+            padding: 12px 15px;
+            font-size: 0.75rem;
+            font-weight: 800;
+            color: var(--text-dim);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-radius: 6px;
+            margin-bottom: 5px;
+            transition: 0.2s;
+            cursor: pointer;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            background: var(--glass);
+            color: var(--text);
+            box-shadow: inset 0 0 10px rgba(255,255,255,0.02);
+        }
+
+        /* --- CONTENT VIEW --- */
+        main {
+            flex: 1;
+            position: relative;
+            background: url('https://images.unsplash.com/photo-1614728263952-84ea256f9679?auto=format&fit=crop&q=80&w=2000') no-repeat center center;
+            background-size: cover;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 60px;
+        }
+
+        main::before {
+            content: "";
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(to right, #050505 0%, transparent 60%, transparent 100%),
+                        linear-gradient(to top, #050505 10%, transparent 50%);
+        }
+
+        .hero-content { position: relative; z-index: 2; }
+        .hero-tag { color: var(--rs-yellow); font-weight: 900; font-size: 0.7rem; letter-spacing: 5px; margin-bottom: 10px; }
+        h1 { font-size: 4rem; margin: 0; font-weight: 900; letter-spacing: -3px; line-height: 0.85; text-transform: uppercase; }
+
+        /* --- STATUS CARD --- */
+        .status-card {
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.05);
+            padding: 25px;
+            width: 400px;
+            margin-top: 30px;
+            border-radius: 2px;
+        }
+
+        .progress-header { display: flex; justify-content: space-between; font-size: 0.65rem; font-weight: 900; margin-bottom: 10px; color: var(--text-dim); }
+        .progress-bg { width: 100%; height: 2px; background: #222; position: relative; }
+        .progress-fill { height: 100%; background: var(--rs-yellow); width: 0%; transition: width 2s ease-in-out; box-shadow: 0 0 15px var(--rs-yellow); }
+
+        /* --- PLAY FOOTER --- */
+        .footer-action {
+            height: 110px;
+            background: #000;
+            border-top: 1px solid #111;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 40px;
+            z-index: 10;
+        }
+
+        .play-btn {
+            background: var(--rs-yellow);
+            color: #000;
+            border: none;
+            padding: 18px 80px;
+            font-size: 1.4rem;
+            font-weight: 900;
+            cursor: pointer;
+            transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            text-transform: uppercase;
+        }
+
+        .play-btn:hover { transform: scale(1.05); background: #fff; }
+        .play-btn.loading { background: #111; color: #444; cursor: wait; transform: none; }
+
+    </style>
+</head>
+<body>
+
+    <div class="title-bar">
+        <div>MYTHICAL LAUNCHER // STABLE_REL_01</div>
+        <div class="controls">
+            <div class="dot"></div>
+            <div class="dot"></div>
+        </div>
+    </div>
+
+    <div class="app-body">
+        <aside>
+            <div class="logo-area">MYTHICAL.</div>
+            
+            <div class="nav-group">
+                <span class="nav-label">CLIENT</span>
+                <div class="nav-item active">GAMES</div>
+                <div class="nav-item">ARCHIVE</div>
+                <div class="nav-item">COMMUNITY</div>
+            </div>
+
+            <div class="nav-group">
+                <span class="nav-label">INFRASTRUCTURE</span>
+                <div class="nav-item">SYSTEM SETTINGS</div>
+                <div class="nav-item">NETWORK LOGS</div>
+            </div>
+
+            <div style="margin-top: auto; font-size: 0.5rem; color: #333; letter-spacing: 2px; font-weight: 900;">
+                ARCHITECT: CHETHAN
+            </div>
+        </aside>
+
+        <main>
+            <div class="hero-content">
+                <div class="hero-tag">NOW IN SYNCHRONIZATION</div>
+                <h1>ECHOES OF<br>ANDROMEDA</h1>
+                
+                <div class="status-card">
+                    <div class="progress-header">
+                        <span>ESTABLISHING ORBITAL COORDINATES</span>
+                        <span id="percent-txt">0%</span>
+                    </div>
+                    <div class="progress-bg">
+                        <div id="fill-bar" class="progress-fill"></div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div class="footer-action">
+        <div style="font-size: 0.6rem; color: #333; letter-spacing: 5px; font-weight: 900;">ENCRYPTED CONNECTION // 2026</div>
+        <button class="play-btn loading" id="mainBtn">INITIALIZING...</button>
+    </div>
+
+    <script>
+        function updateLauncher() {
+            const startDate = new Date(2026, 3, 1);
+            const today = new Date();
+            const daysPassed = Math.floor((today - startDate) / (1000 * 60 * 60 * 24));
+            
+            // 0.12% Daily Progress for Part 1
+            let progress = (1.5 + (daysPassed * 0.12)).toFixed(1);
+            
+            document.getElementById('percent-txt').innerText = progress + '%';
+            document.getElementById('fill-bar').style.width = progress + '%';
+
+            const btn = document.getElementById('mainBtn');
+            if(progress < 100) {
+                btn.innerText = "SYNCING " + progress + "%";
+                btn.classList.add('loading');
+            } else {
+                btn.innerText = "PLAY";
+                btn.classList.remove('loading');
+            }
+        }
+
+        window.onload = updateLauncher;
+    </script>
+</body>
+</html>
