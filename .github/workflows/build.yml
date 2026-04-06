@@ -2,25 +2,27 @@ name: Build Mythical Launcher
 on: [push]
 
 jobs:
-    build:
-        runs-on: windows-latest
-        steps:
-            - name: Checkout Code
-              uses: actions/checkout@v3
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
 
-            - name: Install Node.js
-              uses: actions/setup-node@v3
-              with:
-                node-size: 16
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
 
-            - name: Install Nativefier
-              run: npm install -g nativefier
+      - name: Install Nativefier
+        run: npm install -g nativefier
 
-            - name: Package Launcher
-              run: nativefier --name "Mythical Launcher" --platform "windows" "https://vexedhere.github.io/Mythicallauncher/launcher.html"
+      - name: Package Launcher
+        # We are pointing to your GitHub Pages URL
+        run: nativefier --name "Mythical Launcher" --platform "windows" "https://vexedhere.github.io/Mythicallauncher/launcher.html"
 
-            - name: Upload Artifact
-              uses: actions/upload-artifact@v3
-              with:
-                name: Mythical-Launcher-EXE
-                path: ./*.zip
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Mythical-Launcher-EXE
+          # This tells GitHub to find the folder Nativefier creates
+          path: ./*win32-x64/
